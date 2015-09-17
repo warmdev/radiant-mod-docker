@@ -15,6 +15,10 @@ sudo docker run -d -p 3838:3838 -v {host_data_folder}:/srv/shiny-server/data rad
 
 `Radiant` will be live at `http://localhost:3838/marketing`. 
 
+### FAQ
+
+If you see `n_distinct` and `na.rm` related errors on the visualization page, this is due to older versions of dependencies (especially the `dplyr` package). In this case, force rebuilding the Docker image (by adding or removing a space to line 18) solves the problem.
+
 ### Version information
 
 * OS: CentOS 7
