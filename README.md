@@ -22,6 +22,6 @@ If you see `n_distinct` and `na.rm` related errors on the visualization page, th
 ### Version information
 
 * OS: CentOS 7
-* R: Revolutionary R Open 3.2.1
+* R: Revolution R Open 3.2.2
 * Shiny Server: 1.4.0.721
 * Radiant: 0.3.17
