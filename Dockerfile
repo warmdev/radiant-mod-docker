@@ -1,6 +1,16 @@
 FROM centos:7
 
-RUN yum -y update; yum clean all; yum -y install wget git ed libcurl-devel gcc-c++ pango-devel
+ENV user_id 1000
+ENV user_name miracle
+
+RUN yum -y update && yum clean all && yum -y install \
+    wget \
+    git \
+    ed \
+    libcurl-devel \
+    gcc-c++
+
+RUN useradd -u $user_id $user_name
 
 WORKDIR /opt/
 # Install R
@@ -22,9 +32,19 @@ RUN git clone --depth 1 https://github.com/vnijs/radiant.git; \
 	cd /opt; rm -rf radiant; \
 	cd /srv/shiny-server/radiant; rm -rf .Rbuildignore .git .gitingore .travis.yml build tests
 # Add starting script
+RUN sed -i -e 's/run_as shiny/run_as miracle/g' /etc/shiny-server/shiny-server.conf
 ADD shiny-server.sh /usr/bin/shiny-server.sh
+USER root
+RUN mkdir /miracle
+RUN ln -s /miracle /srv/shiny-server/apps
 RUN chmod +x /usr/bin/shiny-server.sh
+RUN chown $user_name:$user_name /usr/bin/shiny-server.sh
+RUN mkdir -p /var/log/shiny-server
+RUN touch /var/log/shiny-server.log
+RUN chown $user_name:$user_name /var/log/shiny-server.log
+RUN chown $user_name:$user_name /var/log/shiny-server
 
+USER $user_name
 EXPOSE 3838
 
 CMD ["/usr/bin/shiny-server.sh"]
